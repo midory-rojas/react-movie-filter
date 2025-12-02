@@ -1,5 +1,7 @@
-
+import { useEffect, useState } from "react";
 import './App.css'
+import imgLogo from "./assets/img/disney-logo.png";
+
 
 const filmsArray = [
   { title: 'Inception', genere: 'Fantascienza' },
@@ -12,24 +14,41 @@ const filmsArray = [
 
 function App() {
 
+  const [search, setSearch] = useState("");
+  const [filteredArray, setFilteredArray] = useState(filmsArray);
+
+  useEffect(() => {
+    const newArray = filmsArray.filter((film) => film.genere.includes(search));
+    setFilteredArray(newArray);
+
+  }, [search]);
+
 
   return (
     <>
-      <div className='container py-4'>
-        <header>
+      <div className='container py-4 d-flex flex-column'>
+        <header className="d-flex justify-content-between align-items-center">
+          <img src={imgLogo} />
           <h1>Elenchi di Film</h1>
         </header>
         <main className='py-4'>
-          <select className="form-select">
-            <option selected>Scegli il genere del film</option>
-            {filmsArray.map((film, index) => (
-              <option key={index} className='list-group-item'>
-                {film.genere}
-              </option>
+          <input
+            type="search"
+            className="form-control my-2"
+            placeholder="Scegli il genere"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)} />
+            
+          <ul className="list-group">
+            {filteredArray.map((film, index) => (
+              <li key={index} className="list-group-item list-group-item-dark">
+                <h5>{film.title}</h5>
+                <p>{film.genere}</p>
+              </li>
             ))}
-        </select>
-      </main >
-    </div >
+          </ul>
+        </main >
+      </div >
     </>
   )
 }
